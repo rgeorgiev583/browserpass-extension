@@ -115,6 +115,11 @@ function view(ctl, params) {
                             tabindex: 0,
                             title: "Copy username",
                             action: "copyUsername"
+                        }),
+                        m("div.action.edit", {
+                            tabindex: 0,
+                            title: "Edit",
+                            action: "edit"
                         })
                     ]
                 );
