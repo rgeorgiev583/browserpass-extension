@@ -123,7 +123,8 @@ function view(ctl, params) {
                         })
                     ]
                 );
-            })
+            }),
+            m("div.part.add", "Add credentials")
         )
     );
 
