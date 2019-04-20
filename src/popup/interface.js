@@ -165,16 +165,16 @@ function renderMainView(ctl, params) {
                         })
                     ]
                 );
-            }),
-            m(
-                "div.part.add",
-                {
-                    onclick: e => {
-                        this.inEditView = true;
-                    }
-                },
-                "Add credentials"
-            )
+            })
+        ),
+        m(
+            "div.part.add",
+            {
+                onclick: e => {
+                    this.inEditView = true;
+                }
+            },
+            "Add credentials"
         )
     );
 
