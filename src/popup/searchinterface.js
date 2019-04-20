@@ -32,7 +32,7 @@ function view(ctl, params) {
     return m(
         "form.part.search",
         {
-            onkeydown: function(e) {
+            onkeydown: e => {
                 switch (e.code) {
                     case "Tab":
                         e.preventDefault();
@@ -61,31 +61,35 @@ function view(ctl, params) {
                 ? m("div.hint.badge", [
                       this.popup.settings.host,
                       m("div.remove-hint", {
-                          onclick: function(e) {
+                          onclick: e => {
                               var target = document.querySelector(
                                   ".part.search > input[type=text]"
                               );
                               target.focus();
                               self.popup.currentDomainOnly = false;
-                              self.popup.search(target.value);
+                              self.popup.search(this.popup.searchQuery);
                           }
                       })
                   ])
                 : null,
             m("input[type=text]", {
+                value: this.popup.searchQuery,
                 focused: true,
                 placeholder: "Search logins...",
-                oncreate: function(e) {
+                oncreate: e => {
                     e.dom.focus();
                 },
-                oninput: function(e) {
-                    self.popup.search(e.target.value);
+                oninput: e => {
+                    this.popup.searchQuery = e.target.value;
+                    self.popup.search(this.popup.searchQuery);
                 },
-                onkeydown: function(e) {
+                onkeydown: e => {
                     switch (e.code) {
                         case "Backspace":
+                            this.popup.searchQuery = e.target.value;
+
                             if (self.popup.currentDomainOnly) {
-                                if (e.target.value.length == 0) {
+                                if (this.popup.searchQuery.length == 0) {
                                     self.popup.currentDomainOnly = false;
                                     self.popup.search("");
                                 } else if (
@@ -93,7 +97,7 @@ function view(ctl, params) {
                                     e.target.selectionEnd == 0
                                 ) {
                                     self.popup.currentDomainOnly = false;
-                                    self.popup.search(e.target.value);
+                                    self.popup.search(this.popup.searchQuery);
                                 }
                             }
                             break;

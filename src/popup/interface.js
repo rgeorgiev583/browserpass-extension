@@ -3,6 +3,7 @@ module.exports = Interface;
 const m = require("mithril");
 const Moment = require("moment");
 const SearchInterface = require("./searchinterface");
+const AddEditInterface = require("./addeditinterface");
 const helpers = require("../helpers");
 
 const LATEST_NATIVE_APP_VERSION = 3000003;
@@ -28,6 +29,7 @@ function Interface(settings, logins) {
     this.logins = logins;
     this.results = [];
     this.currentDomainOnly = !settings.tab.url.match(/^(chrome|about):/);
+    this.searchQuery = "";
     this.searchPart = new SearchInterface(this);
 
     // initialise with empty search
@@ -59,7 +61,7 @@ function view(ctl, params) {
     const nodes = [];
 
     if (this.inEditView) {
-        nodes.push(new AddEditInterface());
+        nodes.push(m(new AddEditInterface(this)));
     } else {
         nodes.push(...this.renderMainView(ctl, params));
     }
@@ -99,7 +101,7 @@ function renderMainView(ctl, params) {
     nodes.push(
         m(
             "div.logins",
-            this.results.map(function(result) {
+            this.results.map(result => {
                 const storeBgColor = result.store.bgColor || result.store.settings.bgColor;
                 const storeColor = result.store.color || result.store.settings.color;
 
@@ -108,9 +110,11 @@ function renderMainView(ctl, params) {
                     {
                         key: result.index,
                         tabindex: 0,
-                        onclick: function(e) {
+                        onclick: e => {
                             var action = e.target.getAttribute("action");
-                            if (action) {
+                            if (action === "edit") {
+                                this.inEditView = true;
+                            } else if (action) {
                                 result.doAction(action);
                             } else {
                                 result.doAction("fill");
@@ -162,7 +166,15 @@ function renderMainView(ctl, params) {
                     ]
                 );
             }),
-            m("div.part.add", "Add credentials")
+            m(
+                "div.part.add",
+                {
+                    onclick: e => {
+                        this.inEditView = true;
+                    }
+                },
+                "Add credentials"
+            )
         )
     );
 
