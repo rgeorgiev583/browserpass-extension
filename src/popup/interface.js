@@ -20,6 +20,7 @@ function Interface(settings, logins) {
     // public methods
     this.attach = attach;
     this.view = view;
+    this.renderMainView = renderMainView;
     this.search = search;
 
     // fields
@@ -55,6 +56,43 @@ function attach(element) {
  * @return []Vnode
  */
 function view(ctl, params) {
+    const nodes = [];
+
+    if (this.inEditView) {
+        nodes.push(new AddEditInterface());
+    } else {
+        nodes.push(...this.renderMainView(ctl, params));
+    }
+
+    if (this.settings.version < LATEST_NATIVE_APP_VERSION) {
+        nodes.push(
+            m("div.updates", [
+                m("span", "Update native host app: "),
+                m(
+                    "a",
+                    {
+                        href: "https://github.com/browserpass/browserpass-native#installation",
+                        target: "_blank"
+                    },
+                    "instructions"
+                )
+            ])
+        );
+    }
+
+    return nodes;
+}
+
+/**
+ * Generates vnodes for rendering main view
+ *
+ * @since 3.1.0
+ *
+ * @param function ctl    Controller
+ * @param object   params Runtime params
+ * @return []Vnode
+ */
+function renderMainView(ctl, params) {
     var nodes = [];
     nodes.push(m(this.searchPart));
 
@@ -127,22 +165,6 @@ function view(ctl, params) {
             m("div.part.add", "Add credentials")
         )
     );
-
-    if (this.settings.version < LATEST_NATIVE_APP_VERSION) {
-        nodes.push(
-            m("div.updates", [
-                m("span", "Update native host app: "),
-                m(
-                    "a",
-                    {
-                        href: "https://github.com/browserpass/browserpass-native#installation",
-                        target: "_blank"
-                    },
-                    "instructions"
-                )
-            ])
-        );
-    }
 
     return nodes;
 }
