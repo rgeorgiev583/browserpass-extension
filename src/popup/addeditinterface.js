@@ -29,25 +29,22 @@ function AddEditInterface(popup) {
  */
 function view(ctl, params) {
     return [
-        m("div.part", [
-            m(
-                "div.back",
-                {
-                    onclick: e => {
-                        this.popup.inEditView = false;
-                        console.log("back,", this.popup.searchPart.searchQuery);
-                    }
-                },
-                "Back"
-            ),
-            m("div.save", "Save")
+        m("div.part.title", [
+            m("div.btn.back", {
+                onclick: e => {
+                    this.popup.inEditView = false;
+                }
+            }),
+            m("span", "Add credentials"),
+            m("div.btn.save")
         ]),
         m("div.part", [
             m("select", m("option", { value: "pass" }, "pass")),
             m("div", "~/.password-store/")
         ]),
-        m("div.part", [m("input[type=text]"), m("div", ".gpg")]),
-        m("div.part", [m("input[type=text]"), m("button", "Generate")]),
-        m("textarea")
+        m("div.part", [m("input[type=text]", { placeholder: "filename" }), m("div", ".gpg")]),
+        m("div.part", [m("input[type=text]", { placeholder: "password" }), m("div.btn.generate")]),
+        m("textarea", { placeholder: "user: johnsmith" }),
+        m("button", "Delete")
     ];
 }

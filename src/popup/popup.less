@@ -242,15 +242,43 @@ body {
     }
 }
 
-.part {
-    .back,
-    .save {
-        background-position: center;
-        background-repeat: no-repeat;
-        background-size: 19px;
-        width: 30px;
-        height: 41px;
-        padding: 6px;
+.part .btn {
+    cursor: pointer;
+    background-position: center;
+    background-repeat: no-repeat;
+    padding: 6px;
+    background-size: 19px;
+    height: 30px;
+
+    &:hover,
+    &:focus {
+        background-color: @hover-bg-color;
+        outline: none;
+    }
+
+    &.back {
+        background-image: url("/popup/icon-back.svg");
+        width: 20px;
+    }
+
+    &.save {
+        background-image: url("/popup/icon-save.svg");
+        width: 25px;
+    }
+
+    &.generate {
+        background-size: 14px;
+        width: 15px;
+        height: 15px;
+        background-image: url("/popup/icon-generate.svg");
+    }
+}
+
+.part.title {
+    justify-content: space-between;
+
+    span {
+        align-self: center;
     }
 }
 
