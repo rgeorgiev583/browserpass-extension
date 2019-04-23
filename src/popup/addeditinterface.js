@@ -28,26 +28,56 @@ function AddEditInterface(popup) {
  * @return []Vnode
  */
 function view(ctl, params) {
-    return [
-        m("div.part.title", [
+    const items = [
+        m("div.title", [
             m("div.btn.back", {
                 onclick: e => {
                     this.popup.inEditView = false;
                 }
             }),
-            m("span", "Add credentials"),
+            m("span", this.popup.isNew ? "Add credentials" : "Edit credentials"),
             m("div.btn.save")
         ]),
-        m("div.part", [
-            m("select", m("option", { value: "pass" }, "pass")),
-            m("div", "~/.password-store/")
+        m("div.location", [
+            m("div.store", [
+                m(
+                    "select",
+                    { disabled: !this.popup.isNew },
+                    m("option", { value: "pass" }, "pass"),
+                    m("option", { value: "demo" }, "demo")
+                ),
+                m("div.storePath", "~/.password-store/")
+            ]),
+            m("div.path", [
+                m("input[type=text]", {
+                    placeholder: "filename",
+                    disabled: !this.popup.isNew,
+                    value: this.popup.isNew ? "" : "personal/github.com"
+                }),
+                m("div", ".gpg")
+            ])
         ]),
-        m("div.part.path", [m("input[type=text]", { placeholder: "filename" }), m("div", ".gpg")]),
-        m("div.part.password", [
-            m("input[type=text]", { placeholder: "password" }),
-            m("div.btn.generate")
-        ]),
-        m("textarea", { placeholder: "user: johnsmith" }),
-        m("button", "Delete")
+        m("div.contents", [
+            m("div.password", [
+                m("input[type=text]", {
+                    placeholder: "password",
+                    value: this.popup.isNew ? "" : "p@ssw0rd"
+                }),
+                m("div.btn.generate")
+            ]),
+            m(
+                "div.details",
+                m("textarea", {
+                    placeholder: "user: johnsmith",
+                    value: this.popup.isNew ? "" : "user: maximbaz"
+                })
+            )
+        ])
     ];
+
+    if (!this.popup.isNew) {
+        items.push(m("div.actions", m("button.delete", "Delete")));
+    }
+
+    return m("div.addEdit", items);
 }

@@ -114,6 +114,7 @@ function renderMainView(ctl, params) {
                             var action = e.target.getAttribute("action");
                             if (action === "edit") {
                                 this.inEditView = true;
+                                this.isNew = false;
                             } else if (action) {
                                 result.doAction(action);
                             } else {
@@ -172,6 +173,7 @@ function renderMainView(ctl, params) {
             {
                 onclick: e => {
                     this.inEditView = true;
+                    this.isNew = true;
                 }
             },
             "Add credentials"

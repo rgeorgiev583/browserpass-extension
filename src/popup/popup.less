@@ -44,6 +44,7 @@ body {
     white-space: nowrap;
     background-color: @bg-color;
     color: @text-color;
+    cursor: default;
 }
 
 @media (min-resolution: 192dpi) {
@@ -242,54 +243,121 @@ body {
     }
 }
 
-.part .btn {
-    cursor: pointer;
-    background-position: center;
-    background-repeat: no-repeat;
-    padding: 6px;
-    background-size: 19px;
-    height: 30px;
+.addEdit {
+    .title {
+        display: flex;
+        box-sizing: border-box;
+        justify-content: space-between;
 
-    &:hover,
-    &:focus {
-        background-color: @hover-bg-color;
+        span {
+            align-self: center;
+        }
+    }
+
+    .btn {
+        cursor: pointer;
+        background-position: center;
+        background-repeat: no-repeat;
+        padding: 6px;
+        background-size: 19px;
+        height: 21px;
+
+        &:hover,
+        &:focus {
+            background-color: @hover-bg-color;
+            outline: none;
+        }
+
+        &.back {
+            background-image: url("/popup/icon-back.svg");
+            width: 20px;
+        }
+
+        &.save {
+            background-image: url("/popup/icon-save.svg");
+            width: 25px;
+        }
+
+        &.generate {
+            background-size: 14px;
+            width: 15px;
+            height: 15px;
+            background-image: url("/popup/icon-generate.svg");
+        }
+    }
+
+    .location {
+        margin: 6px 6px 20px;
+
+        .store,
+        .path {
+            display: flex;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+
+        .storePath {
+            margin-left: 10px;
+        }
+
+        select {
+            background-color: #4a4a4a;
+            border: none;
+            outline: none;
+            color: #eee;
+            padding: 5px;
+            cursor: pointer;
+        }
+
+        input[disabled],
+        select[disabled] {
+            color: grey;
+            cursor: default;
+        }
+    }
+
+    .contents {
+        display: flex;
+        flex-direction: column;
+        margin: 0 6px 20px;
+
+        .password,
+        .details {
+            display: flex;
+            margin-bottom: 6px;
+        }
+    }
+
+    .actions {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        margin-bottom: 10px;
+
+        .delete {
+            background-color: red;
+            border: none;
+            padding: 5px 10px;
+            background-color: #e42929;
+            color: #252525;
+        }
+    }
+
+    input[type="text"],
+    textarea {
+        background-color: #4a4a4a;
+        border: none;
         outline: none;
+        width: 100%;
+        color: #eee;
+        font-family: "Open Sans";
+        padding: 5px 8px;
     }
 
-    &.back {
-        background-image: url("/popup/icon-back.svg");
-        width: 20px;
+    textarea {
+        resize: none;
+        height: 70px;
     }
-
-    &.save {
-        background-image: url("/popup/icon-save.svg");
-        width: 25px;
-    }
-
-    &.generate {
-        background-size: 14px;
-        width: 15px;
-        height: 15px;
-        background-image: url("/popup/icon-generate.svg");
-    }
-}
-
-.part.title {
-    justify-content: space-between;
-
-    span {
-        align-self: center;
-    }
-}
-
-.part.path input[type="text"],
-.part.password input[type="text"] {
-    background-color: #4a4a4a;
-    border: none;
-    outline: none;
-    width: 100%;
-    color: #eee;
-    font-family: "Open Sans";
 }
 
 .updates {
