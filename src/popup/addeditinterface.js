@@ -65,6 +65,17 @@ function view(ctl, params) {
                 }),
                 m("div.btn.generate")
             ]),
+            m("div.options", [
+                m("input[type=checkbox]", {
+                    id: "include_symbols",
+                    checked: true
+                }),
+                m("label", { for: "include_symbols" }, "symbols"),
+                m("input[type=number]", {
+                    value: "40"
+                }),
+                m("span", "length")
+            ]),
             m(
                 "div.details",
                 m("textarea", {

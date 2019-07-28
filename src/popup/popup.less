@@ -322,9 +322,27 @@ body {
         margin: 0 6px 20px;
 
         .password,
+        .options,
         .details {
             display: flex;
             margin-bottom: 6px;
+        }
+
+        .options {
+            font-size: 12px;
+            align-items: center;
+            margin-bottom: 10px;
+
+            input[type="checkbox"] {
+                margin: 3px;
+            }
+
+            input[type="number"] {
+                font-size: 12px;
+                width: 40px;
+                margin-left: 10px;
+                margin-right: 3px;
+            }
         }
     }
 
@@ -335,6 +353,7 @@ body {
         margin-bottom: 10px;
 
         .delete {
+            cursor: pointer;
             background-color: red;
             border: none;
             padding: 5px 10px;
@@ -343,6 +362,7 @@ body {
         }
     }
 
+    input[type="number"],
     input[type="text"],
     textarea {
         background-color: #4a4a4a;
