@@ -2,6 +2,7 @@
 "use strict";
 
 require("chrome-extension-async");
+const m = require("mithril");
 const Interface = require("./interface");
 const helpers = require("../helpers");
 
@@ -62,7 +63,7 @@ async function run() {
             login.doAction = withLogin.bind({ settings: settings, login: login });
         }
 
-        var popup = new Interface(settings, logins);
+        var popup = new Interface(settings, logins, createEditLoginObject);
         popup.attach(document.body);
     } catch (e) {
         handleError(e);
@@ -96,6 +97,14 @@ async function withLogin(action) {
             case "copyUsername":
                 handleError("Copying username to clipboard...", "notice");
                 break;
+            case "fetch":
+                break;
+            case "save":
+                handleError("Saving login details...", "notice");
+                break;
+            case "delete":
+                handleError("Deleting login details...", "notice");
+                break;
             default:
                 handleError("Please wait...", "notice");
                 break;
@@ -112,10 +121,32 @@ async function withLogin(action) {
         });
         if (response.status != "ok") {
             throw new Error(response.message);
-        } else {
+        } else if (action != "fetch") {
             window.close();
         }
+        return response;
     } catch (e) {
         handleError(e);
+    }
+}
+
+function createEditLoginObject(settings, login) {
+    this.editLogin = {
+        store: login ? login.store : settings.stores.default,
+        login: login ? login.login : ""
+    };
+    this.editLogin.doAction = withLogin.bind({ settings: settings, login: this.editLogin });
+
+    if (login) {
+        withLogin
+            .bind({ settings: settings, login: login })("fetch")
+            .then(response => {
+                if (!response || response.status != "ok") return;
+
+                const contents = response.contents.split("\n", 2);
+                this.editLogin.password = contents[0];
+                this.editLogin.details = contents[1];
+                m.redraw();
+            });
     }
 }

@@ -678,7 +678,7 @@ async function handleMessage(settings, message, sendResponse) {
 
     // fetch file & parse fields if a login entry is present
     try {
-        if (typeof message.login !== "undefined") {
+        if (message.action != "save" && typeof message.login !== "undefined") {
             await parseFields(settings, message.login);
         }
     } catch (e) {
@@ -808,6 +808,49 @@ async function handleMessage(settings, message, sendResponse) {
                 }
             }
             break;
+        case "fetch":
+            try {
+                var response = await hostAction(settings, "fetch", {
+                    storeId: message.login.store.id,
+                    file: message.login.login + ".gpg"
+                });
+                sendResponse({ status: "ok", contents: response.data.contents });
+            } catch (e) {
+                sendResponse({
+                    status: "error",
+                    message: "Unable to fetch login details: " + e.toString()
+                });
+            }
+            break;
+        case "save":
+            try {
+                var response = await hostAction(settings, "save", {
+                    storeId: message.login.store.id,
+                    file: message.login.login + ".gpg",
+                    contents: message.login.password + "\n" + message.login.details
+                });
+                sendResponse({ status: "ok" });
+            } catch (e) {
+                sendResponse({
+                    status: "error",
+                    message: "Unable to save login details: " + e.toString()
+                });
+            }
+            break;
+        case "delete":
+            try {
+                var response = await hostAction(settings, "delete", {
+                    storeId: message.login.store.id,
+                    file: message.login.login + ".gpg"
+                });
+                sendResponse({ status: "ok" });
+            } catch (e) {
+                sendResponse({
+                    status: "error",
+                    message: "Unable to delete login details: " + e.toString()
+                });
+            }
+            break;
         case "clearUsageData":
             try {
                 await clearUsageData();
@@ -828,7 +871,11 @@ async function handleMessage(settings, message, sendResponse) {
     }
 
     // trigger browserpass-otp
-    if (typeof message.login !== "undefined" && message.login.fields.hasOwnProperty("otp")) {
+    if (
+        typeof message.login !== "undefined" &&
+        typeof message.login.fields !== "undefined" &&
+        message.login.fields.hasOwnProperty("otp")
+    ) {
         triggerOTPExtension(settings, message.action, message.login.fields.otp);
     }
 }

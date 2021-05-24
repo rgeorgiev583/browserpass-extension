@@ -17,12 +17,13 @@ const LATEST_NATIVE_APP_VERSION = 3000003;
  * @param array  logins   Array of available logins
  * @return void
  */
-function Interface(settings, logins) {
+function Interface(settings, logins, createEditLoginObject) {
     // public methods
     this.attach = attach;
     this.view = view;
     this.renderMainView = renderMainView;
     this.search = search;
+    this.createEditLoginObject = createEditLoginObject;
 
     // fields
     this.settings = settings;
@@ -113,6 +114,7 @@ function renderMainView(ctl, params) {
                         onclick: e => {
                             var action = e.target.getAttribute("action");
                             if (action === "edit") {
+                                this.createEditLoginObject(this.settings, result);
                                 this.inEditView = true;
                                 this.isNew = false;
                             } else if (action) {
@@ -172,6 +174,7 @@ function renderMainView(ctl, params) {
             "div.part.add",
             {
                 onclick: e => {
+                    this.createEditLoginObject(this.settings);
                     this.inEditView = true;
                     this.isNew = true;
                 }

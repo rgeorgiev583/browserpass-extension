@@ -36,23 +36,37 @@ function view(ctl, params) {
                 }
             }),
             m("span", this.popup.isNew ? "Add credentials" : "Edit credentials"),
-            m("div.btn.save")
+            m("div.btn.save", {
+                onclick: e => {
+                    this.popup.editLogin.doAction("save");
+                    this.popup.inEditView = false;
+                }
+            })
         ]),
         m("div.location", [
             m("div.store", [
                 m(
                     "select",
-                    { disabled: !this.popup.isNew },
-                    m("option", { value: "pass" }, "pass"),
-                    m("option", { value: "demo" }, "demo")
+                    {
+                        disabled: !this.popup.isNew,
+                        onchange: e => {
+                            this.popup.editLogin.store = this.popup.settings.stores[e.target.value];
+                        }
+                    },
+                    Object.keys(this.popup.settings.stores).map(storeId =>
+                        m("option", { value: storeId }, storeId)
+                    )
                 ),
-                m("div.storePath", "~/.password-store/")
+                m("div.storePath", this.popup.editLogin.store.path)
             ]),
             m("div.path", [
                 m("input[type=text]", {
                     placeholder: "filename",
                     disabled: !this.popup.isNew,
-                    value: this.popup.isNew ? "" : "personal/github.com"
+                    value: this.popup.editLogin.login,
+                    onchange: e => {
+                        this.popup.editLogin.login = e.target.value;
+                    }
                 }),
                 m("div", ".gpg")
             ])
@@ -61,7 +75,10 @@ function view(ctl, params) {
             m("div.password", [
                 m("input[type=text]", {
                     placeholder: "password",
-                    value: this.popup.isNew ? "" : "p@ssw0rd"
+                    value: this.popup.editLogin.password,
+                    onchange: e => {
+                        this.popup.editLogin.password = e.target.value;
+                    }
                 }),
                 m("div.btn.generate")
             ]),
@@ -80,14 +97,30 @@ function view(ctl, params) {
                 "div.details",
                 m("textarea", {
                     placeholder: "user: johnsmith",
-                    value: this.popup.isNew ? "" : "user: maximbaz"
+                    value: this.popup.editLogin.details,
+                    onchange: e => {
+                        this.popup.editLogin.details = e.target.value;
+                    }
                 })
             )
         ])
     ];
 
     if (!this.popup.isNew) {
-        items.push(m("div.actions", m("button.delete", "Delete")));
+        items.push(
+            m(
+                "div.actions",
+                m(
+                    "button.delete",
+                    {
+                        onclick: e => {
+                            this.popup.editLogin.doAction("delete");
+                        }
+                    },
+                    "Delete"
+                )
+            )
+        );
     }
 
     return m("div.addEdit", items);
